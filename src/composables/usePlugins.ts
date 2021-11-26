@@ -5,13 +5,13 @@ const usePlugin = async (plugin: string) =>
   (await import(`../plugins/${plugin}/index.ts`)).default();
 
 
-const getComponent = (plugin: string, component: string) => {
+const getPluginComponent = (plugin: string, component: string) => {
   return defineAsyncComponent(() =>
     import(`../plugins/${plugin}/components/${component}.vue`)
   );
 }
 
-const getInfo = (plugin) => {
+const getPluginInfo = (plugin) => {
   return plugins[plugin];
 }
 
@@ -19,7 +19,7 @@ export function usePlugins() {
   return {
     plugins,
     usePlugin,
-    getComponent,
-    getInfo
+    getPluginComponent,
+    getPluginInfo
   }
 }

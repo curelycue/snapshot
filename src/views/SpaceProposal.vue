@@ -32,7 +32,7 @@ const { web3 } = useWeb3();
 const { send, clientLoading } = useClient();
 const { getExplore } = useApp();
 const notify = inject('notify');
-const { getComponent } = usePlugins();
+const { getPluginComponent } = usePlugins();
 
 const id = route.params.id;
 
@@ -279,7 +279,7 @@ onMounted(async () => {
       <div v-if="loaded && proposal.plugins">
         <component
           v-for="plugin in Object.keys(proposal.plugins)"
-          :is="getComponent(plugin, 'Content')"
+          :is="getPluginComponent(plugin, 'Content')"
           :proposal="proposal"
         />
       </div>

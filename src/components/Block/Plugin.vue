@@ -4,8 +4,8 @@ import { usePlugins } from '@/composables/usePlugins';
 
 const props = defineProps(['plugin']);
 const { explore } = useApp();
-const { getInfo } = usePlugins();
-const info = getInfo(props.plugin);
+const { getPluginInfo } = usePlugins();
+const info = getPluginInfo(props.plugin);
 </script>
 
 <template>

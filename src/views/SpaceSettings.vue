@@ -33,7 +33,7 @@ const { copyToClipboard } = useCopy();
 const { web3 } = useWeb3();
 const { send, clientLoading } = useClient();
 const notify = inject('notify');
-const { getInfo } = usePlugins();
+const { getPluginInfo } = usePlugins();
 
 const currentSettings = ref({});
 const currentTextRecord = ref('');
@@ -624,7 +624,7 @@ watchEffect(async () => {
                   @click="handleEditPlugins(key)"
                   class="p-4 block border rounded-md"
                 >
-                  <h4 v-text="getInfo(key).name" />
+                  <h4 v-text="getPluginInfo(key).name" />
                 </a>
               </div>
             </div>
