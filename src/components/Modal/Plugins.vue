@@ -9,7 +9,7 @@ const emit = defineEmits(['add', 'close']);
 const { open } = toRefs(props);
 const searchInput = ref('');
 const input = ref('');
-const selectedPlugin = ref({});
+const selectedPlugin = ref('');
 
 const { filteredPlugins } = useSearchFilters();
 const plugins = computed(() => filteredPlugins());
@@ -26,7 +26,7 @@ const isValid = computed(() => {
 function handleSubmit() {
   let inputClone = clone(input.value);
   inputClone = JSON.parse(inputClone);
-  const key = selectedPlugin.value.key;
+  const key = selectedPlugin.value;
   emit('add', { inputClone, key });
   emit('close');
 }
@@ -35,12 +35,11 @@ watch(open, () => {
   if (Object.keys(props.plugin).length > 0) {
     const key = Object.keys(props.plugin)[0];
     input.value = JSON.stringify(props.plugin[key], null, 2);
-    selectedPlugin.value = plugins.value.find(obj => {
-      return obj.key === key;
-    });
+    console.log(plugins.value)
+    selectedPlugin.value = key;
   } else {
     input.value = JSON.stringify({}, null, 2);
-    selectedPlugin.value = {};
+    selectedPlugin.value = '';
   }
 });
 
@@ -60,21 +59,21 @@ watch(
     <template v-slot:header>
       <h3>
         {{
-          selectedPlugin?.key
+          selectedPlugin
             ? $t('settings.editPlugin')
             : $t('settings.addPlugin')
         }}
       </h3>
     </template>
     <Search
-      v-if="!selectedPlugin?.key"
+      v-if="!selectedPlugin"
       v-model="searchInput"
       :placeholder="$t('searchPlaceholder')"
       :modal="true"
     />
     <div class="mt-4 mx-0 md:mx-4">
       <div
-        v-if="selectedPlugin?.key"
+        v-if="selectedPlugin"
         class="p-4 mb-4 border rounded-md link-color"
       >
         <h4 v-text="selectedPlugin.name" class="mb-3 text-center" />
