@@ -52,6 +52,27 @@ To bootstrap a new plugin, run `yarn run create-plugin MyPlugin` and read the co
 
 If you need a new package dependency, just install it and include the update `/package.json` and `yarn.lock`.
 
+##### Slots
+
+The Snapshot UI lets you add custom components in a handful of predifned plugin slots.
+
+![image](https://user-images.githubusercontent.com/6792578/143721762-74f5b9a0-202c-44a9-9ee2-486fb8dc5502.png)
+![image](https://user-images.githubusercontent.com/6792578/143721766-c39beef2-1f7f-4659-8999-61ca83d9e23d.png)
+
+To display custom content, e.g. in the proposals sidebar, create a `ProposalSidebar.vue` in your plugin's component directory.
+
+##### Wallet
+
+To interact with the user's wallet and request signatures, use the web3 composable:
+
+```js
+import { useWeb3 } from '@/composables/useWeb3';
+
+const { wallet } = useWeb3();
+
+wallet.sendTransaction({...});
+```
+
 ## License
 
 [MIT](LICENSE).
