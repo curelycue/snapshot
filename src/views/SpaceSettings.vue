@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watchEffect, inject } from 'vue';
+import { computed, ref, watchEffect, inject, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { getAddress } from '@ethersproject/address';
 import {
@@ -16,6 +16,7 @@ import { useWeb3 } from '@/composables/useWeb3';
 import { calcFromSeconds, calcToSeconds } from '@/helpers/utils';
 import { useClient } from '@/composables/useClient';
 import { usePlugins } from '@/composables/usePlugins';
+import { setPageTitle } from '@/helpers/utils';
 
 const props = defineProps({
   spaceId: String,
@@ -30,7 +31,7 @@ const basicValidation = { name: 'basic', params: {} };
 
 const { t } = useI18n();
 const { copyToClipboard } = useCopy();
-const { web3 } = useWeb3();
+const { web3Account } = useWeb3();
 const { send, clientLoading } = useClient();
 const notify = inject('notify');
 const { getPluginInfo } = usePlugins();
@@ -60,8 +61,6 @@ const form = ref({
   voting: {},
   validation: basicValidation
 });
-
-const web3Account = computed(() => web3.value.account);
 
 const validate = computed(() => {
   if (form.value.terms === '') delete form.value.terms;
@@ -204,11 +203,11 @@ function handleAddPlugins() {
 }
 
 function handleSubmitAddPlugins(payload) {
-  form.value.plugins[payload.key] = payload.inputClone;
+  form.value.plugins[payload.key] = payload.input;
 }
 
 function handleSubmitAddValidation(validation) {
-  form.value.validation = validation;
+  form.value.validation = clone(validation);
 }
 
 function setUploadLoading(s) {
@@ -265,6 +264,10 @@ watchEffect(async () => {
     }
     loaded.value = true;
   }
+});
+
+onMounted(() => {
+  setPageTitle('page.title.space.settings', { space: props.space.name });
 });
 </script>
 
@@ -414,9 +417,9 @@ watchEffect(async () => {
               >
                 <template v-slot:label> {{ $t(`settings.terms`) }} </template>
               </UiInput>
-              <div class="flex items-center px-2">
-                <Checkbox v-model="form.private" class="mr-2 mt-1" />
-                {{ $t('settings.hideSpace') }}
+              <div class="flex items-center space-x-2 px-2">
+                <Checkbox v-model="form.private" />
+                <span>{{ $t('settings.hideSpace') }}</span>
               </div>
             </div>
           </Block>
@@ -542,12 +545,9 @@ watchEffect(async () => {
                     $t('settings.proposalThreshold')
                   }}</template>
                 </UiInput>
-                <div class="mb-2 flex items-center px-2">
-                  <Checkbox
-                    v-model="form.filters.onlyMembers"
-                    class="mr-2 mt-1"
-                  />
-                  {{ $t('settings.allowOnlyAuthors') }}
+                <div class="flex items-center space-x-2 px-2">
+                  <Checkbox v-model="form.filters.onlyMembers" />
+                  <span>{{ $t('settings.allowOnlyAuthors') }}</span>
                 </div>
               </div>
             </div>
@@ -583,6 +583,15 @@ watchEffect(async () => {
                 </select>
               </template>
             </UiInput>
+            <UiInput
+              v-model="form.voting.quorum"
+              :number="true"
+              placeholder="1000"
+            >
+              <template v-slot:label>
+                {{ $t('settings.quorum') }}
+              </template>
+            </UiInput>
             <UiInput>
               <template v-slot:label>
                 {{ $t('settings.type') }}
@@ -597,15 +606,10 @@ watchEffect(async () => {
                 </div>
               </template>
             </UiInput>
-            <UiInput
-              v-model="form.voting.quorum"
-              :number="true"
-              placeholder="1000"
-            >
-              <template v-slot:label>
-                {{ $t('settings.quorum') }}
-              </template>
-            </UiInput>
+            <div class="flex items-center space-x-2 px-2">
+              <Checkbox v-model="form.voting.hideAbstain" />
+              <span>{{ $t('settings.hideAbstain') }}</span>
+            </div>
           </Block>
           <Block :title="$t('plugins')">
             <div v-if="form?.plugins">
@@ -685,7 +689,7 @@ watchEffect(async () => {
     </Suspense>
     <ModalValidation
       :open="modalValidationOpen"
-      :validation="clone(form.validation)"
+      :validation="form.validation"
       @close="modalValidationOpen = false"
       @add="handleSubmitAddValidation"
     />

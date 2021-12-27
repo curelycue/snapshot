@@ -10,11 +10,7 @@ export default defineConfig({
     'process.env': process.env
   },
   plugins: [
-    vue({
-      script: {
-        refSugar: true
-      }
-    }),
+    vue({ reactivityTransform: true }),
     ViteComponents({
       dirs: ['src/components', 'src/plugins'],
       directoryAsNamespace: true
