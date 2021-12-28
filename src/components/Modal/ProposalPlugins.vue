@@ -2,7 +2,6 @@
 import { ref, watch, toRefs } from 'vue';
 import { clone } from '@snapshot-labs/snapshot.js/src/utils';
 import { usePlugins } from '@/composables/usePlugins';
-import pluginsConfig from '@/components/Plugin/config.json';
 
 const props = defineProps({
   open: Boolean,
@@ -17,13 +16,6 @@ const { open } = toRefs(props);
 const selected = ref(false);
 const form = ref({});
 const { getPluginInfo } = usePlugins();
-
-function showButton(key) {
-  const pluginsWithParams = Object.keys(props.space.plugins).filter(
-    plugin => pluginsConfig[plugin]?.proposalParams
-  );
-  return pluginsWithParams.map(plugin => plugin).includes(key);
-}
 
 watch(open, () => {
   if (props.modelValue && props.open) form.value = clone(props.modelValue);
@@ -64,7 +56,7 @@ watch(selected, value => {
             <Icon name="external-link" />
           </a>
         </div>
-        <UiButton v-if="showButton(key)" @click="selected = key">
+        <UiButton v-if="getPluginInfo(key).defaults?.proposal" @click="selected = key">
           {{ !form[key] ? $t('add') : $t('edit') }}
         </UiButton>
       </div>
