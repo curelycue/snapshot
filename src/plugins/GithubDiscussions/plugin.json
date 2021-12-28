@@ -3,7 +3,7 @@
   "author": "mktcode",
   "version": 0.1,
   "website": "https://github.com/snapshot-labs/snapshot/blob/develop/src/plugins/GithubDiscussions/README.md",
-  "icon": "https://raw.githubusercontent.com/snapshot-labs/snapshot/develop/src/plugins/GithubDiscussions/logo.png",
+  "icon": "https://github.com/snapshot-labs/snapshot/raw/mkt/github-discussions-plugin/src/plugins/_template/logo.png",
   "defaults": {
     "space": {
       "showLinkInTimeline": true
