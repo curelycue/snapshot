@@ -198,7 +198,7 @@ function handleRemovePlugins(plugin) {
 }
 
 function handleAddPlugins() {
-  currentPlugin.value = {};
+  currentPlugin.value = '';
   modalPluginsOpen.value = true;
 }
 
