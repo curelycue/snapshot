@@ -323,6 +323,7 @@ onMounted(async () => {
       <div v-if="loaded && proposal.plugins">
         <component
           v-for="plugin in Object.keys(proposal.plugins)"
+          :key="`${plugin}-proposal`"
           :is="getPluginComponent(plugin, 'Content')"
           :proposal="proposal"
         />

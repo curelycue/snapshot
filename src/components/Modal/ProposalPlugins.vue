@@ -51,12 +51,19 @@ watch(selected, value => {
         />
         <h3 v-text="getPluginInfo(key).name" />
         <div v-if="getPluginInfo(key).website" class="mb-2">
-          <a :href="getPluginInfo(key).website" target="_blank" class="link-color">
+          <a
+            :href="getPluginInfo(key).website"
+            target="_blank"
+            class="link-color"
+          >
             {{ $t('learnMore') }}
             <Icon name="external-link" />
           </a>
         </div>
-        <UiButton v-if="getPluginInfo(key).defaults?.proposal" @click="selected = key">
+        <UiButton
+          v-if="getPluginInfo(key).defaults?.proposal"
+          @click="selected = key"
+        >
           {{ !form[key] ? $t('add') : $t('edit') }}
         </UiButton>
       </div>

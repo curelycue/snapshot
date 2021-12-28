@@ -42,9 +42,7 @@ watch(open, () => {
     <template v-slot:header>
       <h3>
         {{
-          selectedPlugin
-            ? $t('settings.editPlugin')
-            : $t('settings.addPlugin')
+          selectedPlugin ? $t('settings.editPlugin') : $t('settings.addPlugin')
         }}
       </h3>
     </template>
@@ -55,10 +53,7 @@ watch(open, () => {
       :modal="true"
     />
     <div class="mt-4 mx-0 md:mx-4">
-      <div
-        v-if="selectedPlugin"
-        class="mb-4 link-color"
-      >
+      <div v-if="selectedPlugin" class="mb-4 link-color">
         <h4 v-text="selectedPlugin.name" class="mb-3 text-center" />
         <UiButton
           class="block w-full mb-3 overflow-x-auto"

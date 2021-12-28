@@ -5,7 +5,6 @@ import validations from '@snapshot-labs/snapshot.js/src/validations';
 import { useApp } from '@/composables/useApp';
 import { usePlugins } from '@/composables/usePlugins';
 
-
 export function useSearchFilters() {
   const { strategies, explore } = useApp();
   const { plugins } = usePlugins();
@@ -47,7 +46,9 @@ export function useSearchFilters() {
 
   const filteredPlugins = (q = '') =>
     Object.keys(plugins)
-      .filter(key => JSON.stringify(plugins[key]).toLowerCase().includes(q.toLowerCase()))
+      .filter(key =>
+        JSON.stringify(plugins[key]).toLowerCase().includes(q.toLowerCase())
+      )
       .sort((a, b) => plugins[b].spaces - plugins[a].spaces);
 
   const minifiedValidationsArray = computed(() =>

@@ -19,6 +19,7 @@ import { useApp } from '@/composables/useApp';
 import { useExtendedSpaces } from '@/composables/useExtendedSpaces';
 import { useStore } from '@/composables/useStore';
 import { setPageTitle } from '@/helpers/utils';
+import { usePlugins } from '@/composables/usePlugins';
 
 const props = defineProps({
   spaceId: String,
@@ -36,6 +37,7 @@ const { spaceLoading } = useExtendedSpaces();
 const { send, clientLoading } = useClient();
 const { store } = useStore();
 const notify = inject('notify');
+const { getPluginComponent } = usePlugins();
 
 const choices = ref([]);
 const route = useRoute();
@@ -63,6 +65,10 @@ const loadingSnapshot = ref(true);
 
 const proposal = computed(() =>
   Object.assign(form.value, { choices: choices.value })
+);
+
+const spacePlugins = computed(() =>
+  props.space.plugins ? Object.keys(props.space.plugins) : []
 );
 
 // Check if account passes space validation
@@ -350,22 +356,20 @@ watchEffect(() => {
           {{ $t('create.addChoice') }}
         </UiButton>
       </Block>
-      <PluginSafeSnapConfig
-        v-if="space?.plugins?.safeSnap"
-        :proposal="proposal"
-        :config="space.plugins?.safeSnap"
-        :network="space.network"
-        v-model="form.metadata.plugins.safeSnap"
+      <component
+        v-for="plugin in spacePlugins"
+        :key="`${plugin}-create`"
+        :is="getPluginComponent(plugin, 'Create')"
+        :space="space"
+        :proposal="form"
+        :preview="preview"
+        v-model.form="form.metadata.plugins[plugin]"
       />
     </template>
     <template #sidebar-right v-if="!preview">
       <Block
         :title="$t('actions')"
-        :icon="
-          space.plugins && Object.keys(space.plugins).length > 0
-            ? 'stars'
-            : undefined
-        "
+        :icon="spacePlugins.length > 0 ? 'stars' : undefined"
         :loading="spaceLoading"
         @submit="modalProposalPluginsOpen = true"
       >

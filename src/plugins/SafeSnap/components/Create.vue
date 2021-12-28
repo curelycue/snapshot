@@ -2,18 +2,18 @@
 import { clone } from '@snapshot-labs/snapshot.js/src/utils';
 
 const props = defineProps({
-  modelValue: any,
-  config: any,
-  network: any,
-  proposal: any,
-  preview: any
+  form: Object,
+  space: Object,
+  preview: Boolean
 });
 
-const isValidInput = input => {
-  return input.safes.every(
-    safe => safe.txs.length === 0 || safe.txs.flat().every(tx => tx)
-  );
-};
+const emit = defineEmits(['update:form']);
+
+// const isValidInput = input => {
+//   return input.safes.every(
+//     safe => safe.txs.length === 0 || safe.txs.flat().every(tx => tx)
+//   );
+// };
 
 const coerceConfig = (config, network) => {
   if (config.safes) return config;
@@ -24,12 +24,12 @@ const coerceConfig = (config, network) => {
   };
 };
 
-const updateSafeTransactions = (safeIndex) => {
+const updateSafeTransactions = (/** safeIndex */) => {
   if (props.preview) return;
-  props.input.safes[safeIndex].txs;
-  props.input.valid = isValidInput(props.input);
-  tpropshis.$emit('update:modelValue', props.input);
-}
+  // props.form.safes[safeIndex].txs;
+  // props.form.valid = isValidInput(props.form);
+  emit('update:form', props.form);
+};
 
 const initialValue = {
   safes: coerceConfig(props.config, props.network).safes.map(safe => ({
@@ -39,7 +39,7 @@ const initialValue = {
   valid: true
 };
 
-const input = props.modelValue ? clone(props.modelValue) : initialValue
+const input = props.modelValue ? clone(props.modelValue) : initialValue;
 </script>
 
 <template>
